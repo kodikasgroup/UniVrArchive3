@@ -1,3 +1,8 @@
+import os
+
+from telegram import InlineKeyboardButton
+
+
 class Utils:
     @staticmethod
     def get_start_message(opening: str, name: str) -> str:
@@ -21,3 +26,23 @@ class Utils:
                   "📕📕📕Buon Studio 📕📕📕"
         message = message.format(name, opening)
         return message
+
+    @classmethod
+    def get_start_buttons(cls) -> list:
+        """
+        checks all the directories inside the archive directory
+        then for each one it generates a button
+        :return:
+        """
+        path = "archive"
+        buttons = []
+        for d_name in os.listdir(path):
+            if d_name == "EXCLUSIVE":
+                # append eight pointed black star to the front and the back of the button text
+                button_text = "✴" + d_name + "✴"
+                buttons.append([InlineKeyboardButton(button_text, callback_data=d_name)])
+            else:
+                # append pencil to the front and the back of the button text
+                button_text = "✏" + d_name + "✏"
+                buttons.append([InlineKeyboardButton(button_text, callback_data=d_name)])
+        return buttons
