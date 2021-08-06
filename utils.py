@@ -2,14 +2,22 @@ import yaml
 
 
 class Utils:
-    file_path = "key.yaml"
+    file_path = "config.yaml"
 
     @staticmethod
-    def get_key() -> str:
+    def __parse_yaml_file():
         """
-        retrieve the api key for telegram from yaml file
-        :return: api key
+        open settings yaml file and parse it
+        :return: parsed file
         """
         with open(Utils.file_path, "r") as f:
-            parsed_yaml_file = yaml.load(f, Loader=yaml.BaseLoader)
-            return parsed_yaml_file["key"]
+            return yaml.load(f, Loader=yaml.BaseLoader)
+
+    @staticmethod
+    def get_token() -> str:
+        """
+        retrieve the api key for telegram from parsed yaml file
+        :return: api key
+        """
+        parsed_yaml_file = Utils.__parse_yaml_file()
+        return parsed_yaml_file["token"]
