@@ -14,6 +14,7 @@ class Handlers:
         :param context:
         :return:
         """
+
         chat_id = update.message.chat_id
         first_name = update.message.chat.first_name
         message = Utils.get_start_message(opening="Benvenuto/a", name=first_name)
@@ -28,11 +29,40 @@ class Handlers:
                                  reply_markup=reply_markup)
 
     @staticmethod
+    def _home_button_handler(update: Update, context: CallbackContext) -> None:
+        """
+
+        :param update:
+        :param context:
+        :return:
+        """
+        chat_id = update.callback_query.from_user.id
+        first_name = update.callback_query.from_user.first_name
+        message = Utils.get_start_message(opening="Ben ritornato/a", name=first_name)
+
+        buttons = Utils.get_start_buttons()
+        reply_markup = InlineKeyboardMarkup(buttons)
+
+        context.bot.send_message(chat_id=chat_id,
+                                 text=message,
+                                 parse_mode=telegram.ParseMode.MARKDOWN_V2,
+                                 reply_markup=reply_markup)
+
+    @staticmethod
     def inline_button_handler(update: Update, context: CallbackContext) -> None:
+        """
+
+        :param update:
+        :param context:
+        :return:
+        """
+
         chat_id = update.callback_query.from_user.id
         text = update.callback_query.data
         if text == 'EXCLUSIVE':
             pass
+        elif text == 'HOME':
+            Handlers._home_button_handler(update, context)
         else:
             if '_course' in text:
                 course_name = text.split('_')[0]

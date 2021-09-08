@@ -62,3 +62,4 @@ class Utils:
                    [InlineKeyboardButton('🏠HOME', callback_data='HOME')]
                    ]
         return buttons
+
