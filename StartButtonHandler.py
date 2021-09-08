@@ -3,6 +3,7 @@ from telegram import InlineKeyboardMarkup, Update
 from telegram.ext import CallbackContext
 
 from ButtonGenerator import ButtonGenerator
+from HashHandler import HashHandler
 from Utils import Utils
 
 
@@ -100,6 +101,36 @@ class StartButtonHandler:
                                  text=message,
                                  reply_markup=reply_markup,
                                  parse_mode=telegram.ParseMode.MARKDOWN_V2)
+
+    @staticmethod
+    def file_button_handler(update: Update, context: CallbackContext, text: str, chat_id: int):
+        """
+
+        :param update:
+        :param context:
+        :param text: the hashed callback data in the following
+               format `course/year/subject/subdir/FileName__file`
+        :param chat_id:
+        :return:
+        """
+
+        text = text.split("__")[0]
+        text = HashHandler.get_corresponding_text(text)
+        split_text = text.split('/')
+        course_name = split_text[0]
+        year_name = split_text[1]
+        subject_name = split_text[2]
+        subdir_name = split_text[3]
+        file_name = split_text[4]
+
+        path = "archive" + "/" + course_name + "/" + year_name + "/" + subject_name + "/" + subdir_name + '/' + file_name
+        file = open(path, 'rb')
+
+        # TODO send file from telegram chat
+        context.bot.send_document(
+            chat_id=chat_id,
+            document=file
+        )
 
     @staticmethod
     def back_button_handler(update: Update, context: CallbackContext, text: str):

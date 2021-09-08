@@ -129,7 +129,7 @@ class ButtonGenerator:
             [
                 InlineKeyboardButton(
                     '📖' + d_name.replace('_', ' ').replace('-', ' ') + '📖',
-                    callback_data=HashHandler.generate_hash(base_file_callback_data + d_name + '_file')
+                    callback_data=HashHandler.generate_hash(base_file_callback_data + d_name) + '__file'
                 )
             ] for d_name in os.listdir(path)
         ]

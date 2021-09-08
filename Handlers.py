@@ -58,6 +58,5 @@ class Handlers:
                 StartButtonHandler.subject_button_handler(update, context, text, chat_id)
             elif '__subdir' in text:
                 StartButtonHandler.subdir_button_handler(update, context, text, chat_id)
-            elif '_file' in text:
-                # TODO: implement
-                pass
+            elif '__file' in text:
+                StartButtonHandler.file_button_handler(update, context, text, chat_id)
