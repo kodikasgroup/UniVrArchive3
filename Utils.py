@@ -56,10 +56,30 @@ class Utils:
         :return:
         """
         path = "archive" + "/" + course
-        year_buttons = [InlineKeyboardButton(d_name.replace('_', ' '), callback_data=d_name + '_subject') for d_name in os.listdir(path)]
+        year_buttons = [InlineKeyboardButton(d_name.replace('_', ' '), callback_data=d_name + '__year') for d_name in
+                        os.listdir(path)]
 
         buttons = [year_buttons,
                    [InlineKeyboardButton('🏠HOME', callback_data='HOME')]
                    ]
         return buttons
 
+    @staticmethod
+    def get_subject_buttons(course: str, year: str) -> list:
+        """
+
+        :param year:
+        :param course:
+        :return:
+        """
+
+        path = "archive" + "/" + course + "/" + year
+        subject_buttons = [InlineKeyboardButton(d_name.replace('_', ' '), callback_data=d_name + '_subject') for d_name
+                           in os.listdir(path)]
+
+        buttons = [subject_buttons,
+                   [
+                       InlineKeyboardButton('<< BACK', callback_data='BACK'),
+                       InlineKeyboardButton('🏠HOME', callback_data='HOME')]
+                   ]
+        return buttons

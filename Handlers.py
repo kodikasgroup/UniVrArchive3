@@ -1,3 +1,5 @@
+import os
+
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import CallbackContext
 from Utils import Utils
@@ -5,6 +7,9 @@ import telegram
 
 
 class Handlers:
+    selected_course = ""
+    selected_year = ""
+
     @staticmethod
     def start_handler(update: Update, context: CallbackContext) -> None:
         """
@@ -49,6 +54,43 @@ class Handlers:
                                  reply_markup=reply_markup)
 
     @staticmethod
+    def _course_button_handler(context: CallbackContext, text: str, chat_id: int) -> None:
+        """
+
+        :param context:
+        :param text:
+        :param chat_id:
+        :return:
+        """
+        course_name = text.split('_')[0]
+        Handlers.selected_course = course_name
+        buttons = Utils.get_year_buttons(course_name)
+        reply_markup = InlineKeyboardMarkup(buttons)
+        message = f"Hai Scelto:\n{course_name}"
+        context.bot.send_message(chat_id=chat_id,
+                                 text=message,
+                                 reply_markup=reply_markup)
+
+    @staticmethod
+    def _year_button_handler(context: CallbackContext, text: str, chat_id: int) -> None:
+        """
+
+        :param context:
+        :param text:
+        :param chat_id:
+        :return:
+        """
+        year_name = text.split('__')[0]
+        Handlers.selected_year = year_name
+        buttons = Utils.get_subject_buttons(Handlers.selected_course, year_name)
+        reply_markup = InlineKeyboardMarkup(buttons)
+        message = f"Hai Scelto:\n{year_name.replace('_', ' ')}📚📚📚"
+        context.bot.send_message(chat_id=chat_id,
+                                 text=message,
+                                 reply_markup=reply_markup,
+                                 parse_mode=telegram.ParseMode.MARKDOWN_V2)
+
+    @staticmethod
     def inline_button_handler(update: Update, context: CallbackContext) -> None:
         """
 
@@ -65,10 +107,7 @@ class Handlers:
             Handlers._home_button_handler(update, context)
         else:
             if '_course' in text:
-                course_name = text.split('_')[0]
-                buttons = Utils.get_year_buttons(course_name)
-                reply_markup = InlineKeyboardMarkup(buttons)
-                message = f"Hai Scelto:\n{course_name}"
-                context.bot.send_message(chat_id=chat_id,
-                                         text=message,
-                                         reply_markup=reply_markup)
+                Handlers._course_button_handler(context, text, chat_id)
+            elif '__year' in text:
+                Handlers._year_button_handler(context, text, chat_id)
+        # TODO: back handler
