@@ -2,6 +2,8 @@ import os
 
 from telegram import InlineKeyboardButton
 
+from HashHandler import HashHandler
+
 
 class ButtonGenerator:
     @staticmethod
@@ -55,7 +57,6 @@ class ButtonGenerator:
         """
 
         path = "archive" + "/" + course + "/" + year
-        # TODO: group subject, max 2 on each line
         # since the directory name could contain an underscore we use double underscore to separate the
         # `subject` string from the rest
         subject_buttons = [
@@ -65,6 +66,7 @@ class ButtonGenerator:
             ) for d_name in os.listdir(path)
         ]
 
+        # group subjects, MAX 2 on each row
         grouped_subject_buttons = zip(
             subject_buttons[:len(subject_buttons) // 2],
             subject_buttons[len(subject_buttons) // 2:]
@@ -87,19 +89,56 @@ class ButtonGenerator:
     def get_subdir_buttons(course: str, year: str, subject) -> list:
         """
         checks all the directories inside the directory of the selected course, selected year and selected subject
-        then for each one it generates a
+        then for each one it generates a button
         :param course: the name of the selected course
         :param year: the name of the selected year
         :param subject: the name of the selected subject
         :return:
         """
         path = "archive" + "/" + course + "/" + year + "/" + subject
-        subdir_buttons = [[InlineKeyboardButton(d_name.replace('_', ' ').replace('-', ' '), callback_data=d_name + '_subdir')] for d_name
-                          in os.listdir(path)]
+        subdir_buttons = [
+            [
+                InlineKeyboardButton(
+                    d_name.replace('_', ' ').replace('-', ' '),
+                    callback_data=course + "/" + year + "/" + subject + "/" + d_name + '__subdir'
+                )
+            ] for d_name in os.listdir(path)
+        ]
         buttons = [*subdir_buttons,
                    [
                        InlineKeyboardButton('<< BACK',
                                             callback_data=course + '/' + year + '/' + subject + "/" + 'BACK_subdir'),
+                       InlineKeyboardButton('🏠HOME', callback_data='HOME')]
+                   ]
+        return buttons
+
+    @staticmethod
+    def get_file_buttons(course, year, subject, subdir) -> list:
+        """
+        checks all the files inside the directory of the selected course, selected year, selected subject and
+        selected subdir then for each one it generates a button
+        :param course: the name of the selected course
+        :param year: the name of the selected year
+        :param subject: the name of the selected subject
+        :param subdir: the name of the selected subdirectory (EG: APPUNTI)
+        :return:
+        """
+        path = "archive" + "/" + course + "/" + year + "/" + subject + "/" + subdir
+        base_file_callback_data = course + "/" + year + "/" + subject + "/" + subdir + "/"
+        file_buttons = [
+            [
+                InlineKeyboardButton(
+                    '📖' + d_name.replace('_', ' ').replace('-', ' ') + '📖',
+                    callback_data=HashHandler.generate_hash(base_file_callback_data + d_name + '_file')
+                )
+            ] for d_name in os.listdir(path)
+        ]
+
+        back_callback_data = course + '/' + year + '/' + subject + "/" + subdir + "/" + 'BACK_file'
+        buttons = [*file_buttons,
+                   [
+                       InlineKeyboardButton('<< BACK',
+                                            callback_data=back_callback_data),
                        InlineKeyboardButton('🏠HOME', callback_data='HOME')]
                    ]
         return buttons
