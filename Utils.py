@@ -27,8 +27,8 @@ class Utils:
         message = message.format(name, opening)
         return message
 
-    @classmethod
-    def get_start_buttons(cls) -> list:
+    @staticmethod
+    def get_start_buttons() -> list:
         """
         checks all the directories inside the archive directory
         then for each one it generates a button
@@ -44,5 +44,21 @@ class Utils:
             else:
                 # append pencil to the front and the back of the button text
                 button_text = "✏" + d_name + "✏"
-                buttons.append([InlineKeyboardButton(button_text, callback_data=d_name)])
+                buttons.append([InlineKeyboardButton(button_text, callback_data=d_name + '_course')])
+        return buttons
+
+    @staticmethod
+    def get_year_buttons(course: str) -> list:
+        """
+        checks all the directories inside the given directory
+        then for each one it generates a button
+        :param course: the name of the selected course
+        :return:
+        """
+        path = "archive" + "/" + course
+        year_buttons = [InlineKeyboardButton(d_name.replace('_', ' '), callback_data=d_name + '_subject') for d_name in os.listdir(path)]
+
+        buttons = [year_buttons,
+                   [InlineKeyboardButton('🏠HOME', callback_data='HOME')]
+                   ]
         return buttons

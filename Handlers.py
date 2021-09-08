@@ -26,3 +26,19 @@ class Handlers:
                                  text=message,
                                  parse_mode=telegram.ParseMode.MARKDOWN_V2,
                                  reply_markup=reply_markup)
+
+    @staticmethod
+    def inline_button_handler(update: Update, context: CallbackContext) -> None:
+        chat_id = update.callback_query.from_user.id
+        text = update.callback_query.data
+        if text == 'EXCLUSIVE':
+            pass
+        else:
+            if '_course' in text:
+                course_name = text.split('_')[0]
+                buttons = Utils.get_year_buttons(course_name)
+                reply_markup = InlineKeyboardMarkup(buttons)
+                message = f"Hai Scelto:\n{course_name}"
+                context.bot.send_message(chat_id=chat_id,
+                                         text=message,
+                                         reply_markup=reply_markup)
