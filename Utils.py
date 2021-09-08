@@ -1,6 +1,5 @@
-import os
-
-from telegram import InlineKeyboardButton
+from telegram import Update
+from telegram.ext import CallbackContext
 
 
 class Utils:
@@ -28,60 +27,9 @@ class Utils:
         return message
 
     @staticmethod
-    def get_start_buttons() -> list:
-        """
-        checks all the directories inside the archive directory
-        then for each one it generates a button
-        :return:
-        """
-        path = "archive"
-        buttons = []
-        for d_name in os.listdir(path):
-            if d_name == "EXCLUSIVE":
-                # append eight pointed black star to the front and the back of the button text
-                button_text = "✴" + d_name + "✴"
-                buttons.append([InlineKeyboardButton(button_text, callback_data=d_name)])
-            else:
-                # append pencil to the front and the back of the button text
-                button_text = "✏" + d_name + "✏"
-                buttons.append([InlineKeyboardButton(button_text, callback_data=d_name + '_course')])
-        return buttons
+    def delete_last_message(update: Update, context: CallbackContext):
+        message_id = update.callback_query.message.message_id
+        chat_id = update.callback_query.from_user.id
 
-    @staticmethod
-    def get_year_buttons(course: str) -> list:
-        """
-        checks all the directories inside the given directory
-        then for each one it generates a button
-        :param course: the name of the selected course
-        :return:
-        """
-        path = "archive" + "/" + course
-        year_buttons = [InlineKeyboardButton(d_name.replace('_', ' '), callback_data=course + '/' + d_name + '__year')
-                        for d_name in
-                        os.listdir(path)]
-
-        buttons = [year_buttons,
-                   [InlineKeyboardButton('🏠HOME', callback_data='HOME')]
-                   ]
-        return buttons
-
-    @staticmethod
-    def get_subject_buttons(course: str, year: str) -> list:
-        """
-
-        :param year:
-        :param course:
-        :return:
-        """
-
-        path = "archive" + "/" + course + "/" + year
-        # TODO: group subject, max 2 on each line
-        subject_buttons = [InlineKeyboardButton(d_name.replace('_', ' '), callback_data=d_name + '_subject') for d_name
-                           in os.listdir(path)]
-
-        buttons = [subject_buttons,
-                   [
-                       InlineKeyboardButton('<< BACK', callback_data=course + '/' + year + '/' + 'BACK_subject'),
-                       InlineKeyboardButton('🏠HOME', callback_data='HOME')]
-                   ]
-        return buttons
+        context.bot.delete_message(chat_id=chat_id,
+                                   message_id=message_id)
