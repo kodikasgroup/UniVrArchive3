@@ -56,7 +56,8 @@ class Utils:
         :return:
         """
         path = "archive" + "/" + course
-        year_buttons = [InlineKeyboardButton(d_name.replace('_', ' '), callback_data=d_name + '__year') for d_name in
+        year_buttons = [InlineKeyboardButton(d_name.replace('_', ' '), callback_data=course + '/' + d_name + '__year')
+                        for d_name in
                         os.listdir(path)]
 
         buttons = [year_buttons,
@@ -74,12 +75,13 @@ class Utils:
         """
 
         path = "archive" + "/" + course + "/" + year
+        # TODO: group subject, max 2 on each line
         subject_buttons = [InlineKeyboardButton(d_name.replace('_', ' '), callback_data=d_name + '_subject') for d_name
                            in os.listdir(path)]
 
         buttons = [subject_buttons,
                    [
-                       InlineKeyboardButton('<< BACK', callback_data='BACK'),
+                       InlineKeyboardButton('<< BACK', callback_data=course + '/' + year + '/' + 'BACK_subject'),
                        InlineKeyboardButton('🏠HOME', callback_data='HOME')]
                    ]
         return buttons
