@@ -21,6 +21,7 @@ start_handler = CommandHandler('start', Handlers.start_handler)
 button_handler = CallbackQueryHandler(Handlers.inline_button_handler)
 dispatcher.add_handler(start_handler)
 dispatcher.add_handler(button_handler)
+dispatcher.add_error_handler(Handlers.error_handler)
 
 # Start Graphics
 print("####################################")

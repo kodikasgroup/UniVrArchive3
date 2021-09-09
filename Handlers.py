@@ -1,3 +1,6 @@
+import logging
+import traceback
+
 import telegram
 from telegram import Update, InlineKeyboardMarkup
 from telegram.ext import CallbackContext
@@ -60,3 +63,19 @@ class Handlers:
                 StartButtonHandler.subdir_button_handler(update, context, text, chat_id)
             elif '__file' in text:
                 StartButtonHandler.file_button_handler(update, context, text, chat_id)
+
+    @staticmethod
+    def error_handler(update: Update, context: CallbackContext):
+        """
+        Log the error and send a telegram message to notify the developer.
+        :param update:
+        :param context:
+        :return:
+        """
+        logging.info("An Error Occurred: ")
+        traceback.print_tb(context.error.__traceback__)
+        message = "Ci dispiace😞😞" \
+                  "\nSembra si sia verificato un'errore perfavore riavvia il bot utilizzando il comando \/start"
+        context.bot.send_message(chat_id=update.callback_query.from_user.id,
+                                 text=message,
+                                 parse_mode=telegram.ParseMode.MARKDOWN_V2)

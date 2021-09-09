@@ -133,7 +133,6 @@ class StartButtonHandler:
         file = FileHandler.get_file_id(path)
         if file is None:
             file = open(path, 'rb')
-            print(os.path.getsize(path))
             # transform bytes to megabyte
             if os.path.getsize(path) / 1000000 > 7:
                 message = "OOOPS\.\.\.\. Questo è imbarazzante\.\.\.😞😞" \
@@ -144,11 +143,14 @@ class StartButtonHandler:
                                          parse_mode=telegram.ParseMode.MARKDOWN_V2)
 
         # TODO: finish cache system
-        r = context.bot.send_document(
+        response = context.bot.send_document(
             chat_id=chat_id,
             document=file
         )
-        print(r)
+        FileHandler.add_file_id(
+            path=path,
+            file_id=response.document.file_id
+        )
 
     @staticmethod
     def back_button_handler(update: Update, context: CallbackContext, text: str):
