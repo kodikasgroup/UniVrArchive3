@@ -1,8 +1,11 @@
+import os.path
+
 import telegram
 from telegram import InlineKeyboardMarkup, Update
 from telegram.ext import CallbackContext
 
 from ButtonGenerator import ButtonGenerator
+from FileHandler import FileHandler
 from HashHandler import HashHandler
 from Utils import Utils
 
@@ -86,11 +89,13 @@ class StartButtonHandler:
         :return:
         """
 
+        text = text.split("__")[0]
+        text = HashHandler.get_corresponding_text(text)
         split_text = text.split('/')
         course_name = split_text[0]
         year_name = split_text[1]
         subject_name = split_text[2]
-        subdir_name = split_text[3].split("__")[0]
+        subdir_name = split_text[3]
 
         buttons = ButtonGenerator.get_file_buttons(course_name, year_name, subject_name, subdir_name)
         reply_markup = InlineKeyboardMarkup(buttons)
@@ -124,13 +129,26 @@ class StartButtonHandler:
         file_name = split_text[4]
 
         path = "archive" + "/" + course_name + "/" + year_name + "/" + subject_name + "/" + subdir_name + '/' + file_name
-        file = open(path, 'rb')
 
-        # TODO send file from telegram chat
-        context.bot.send_document(
+        file = FileHandler.get_file_id(path)
+        if file is None:
+            file = open(path, 'rb')
+            print(os.path.getsize(path))
+            # transform bytes to megabyte
+            if os.path.getsize(path) / 1000000 > 7:
+                message = "OOOPS\.\.\.\. Questo è imbarazzante\.\.\.😞😞" \
+                          "\nSembra che il file che hai richiesto non sia ancora stato caricato nei ☁ server\.\.\.\." \
+                          "\npertanto sarà necessario un po' di tempo prima che ti arrivi \(10\-30 secondi\)☁"
+                context.bot.send_message(chat_id=chat_id,
+                                         text=message,
+                                         parse_mode=telegram.ParseMode.MARKDOWN_V2)
+
+        # TODO: finish cache system
+        r = context.bot.send_document(
             chat_id=chat_id,
             document=file
         )
+        print(r)
 
     @staticmethod
     def back_button_handler(update: Update, context: CallbackContext, text: str):
@@ -142,8 +160,12 @@ class StartButtonHandler:
         :return:
         """
         split_text = text.split('/')
+        hash_text = split_text[0]
+        hash_text_unhashed = HashHandler.get_corresponding_text(hash_text)
+        back_type = split_text[1].split('_')[-1]
+        split_text = hash_text_unhashed.split('/')
         course_name = split_text[0]
-        back_type = text.split('_')[-1]
+
         chat_id = update.callback_query.from_user.id
 
         if back_type == 'subject':
