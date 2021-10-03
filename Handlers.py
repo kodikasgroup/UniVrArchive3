@@ -6,8 +6,8 @@ from telegram import Update, InlineKeyboardMarkup
 from telegram.ext import CallbackContext
 
 from ExclusiveButtonHandler import ExclusiveButtonHandler
-from StartButtonGenerator import ButtonGenerator
-from StartButtonHandler import StartButtonHandler
+from MainButtonsGenerator import ButtonGenerator
+from MainButtonsHandler import StartButtonHandler
 from Utils import Utils
 
 
@@ -47,8 +47,15 @@ class Handlers:
 
         chat_id = update.callback_query.from_user.id
         text = update.callback_query.data
-        if 'EXCLUSIVE' in text:
-            # Exclusive files
+        if text == 'HOME':
+            StartButtonHandler.home_button_handler(update, context)
+        elif 'BACK' in text:
+            if 'EXCLUSIVE' in text:
+                ExclusiveButtonHandler.back_button_handler(update, context, text, chat_id)
+            else:
+                StartButtonHandler.back_button_handler(update, context, text)
+        elif 'EXCLUSIVE' in text:
+            # Exclusive section
             if '__course' in text:
                 ExclusiveButtonHandler.course_button_handler(context, text, chat_id)
             elif '__year' in text:
@@ -60,10 +67,6 @@ class Handlers:
             else:
                 # handle when the user click the EXCLUSIVE button
                 ExclusiveButtonHandler.exclusive_button_handler(context, chat_id)
-        elif text == 'HOME':
-            StartButtonHandler.home_button_handler(update, context)
-        elif 'BACK' in text:
-            StartButtonHandler.back_button_handler(update, context, text)
         else:
             # Normal files
             if '__course' in text:

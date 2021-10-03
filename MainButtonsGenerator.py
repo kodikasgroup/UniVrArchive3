@@ -79,7 +79,7 @@ class ButtonGenerator:
             )
 
         base_back_file_callback_data = course + '/' + year
-        back_callback_data = HashHandler.generate_hash(base_back_file_callback_data) + "/" + 'BACK_subject'
+        back_callback_data = HashHandler.generate_hash(base_back_file_callback_data) + "/" + 'BACK__subject'
         buttons = [
             *grouped_subject_buttons,
             [
@@ -110,7 +110,7 @@ class ButtonGenerator:
             ] for d_name in os.listdir(path)
         ]
         base_back_file_callback_data = course + '/' + year + '/' + subject
-        back_callback_data = HashHandler.generate_hash(base_back_file_callback_data) + "/" + 'BACK_subdir'
+        back_callback_data = HashHandler.generate_hash(base_back_file_callback_data) + "/" + 'BACK__subdir'
         buttons = [*subdir_buttons,
                    [
                        InlineKeyboardButton('<< BACK', callback_data=back_callback_data),
@@ -141,7 +141,7 @@ class ButtonGenerator:
         ]
 
         base_back_file_callback_data = course + '/' + year + '/' + subject + "/" + subdir
-        back_callback_data = HashHandler.generate_hash(base_back_file_callback_data) + "/" + 'BACK_file'
+        back_callback_data = HashHandler.generate_hash(base_back_file_callback_data) + "/" + 'BACK__file'
         buttons = [
             *file_buttons,
             [

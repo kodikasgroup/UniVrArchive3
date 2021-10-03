@@ -27,7 +27,7 @@ class ExclusiveButtonGenerator:
 
     @staticmethod
     def _get_exclusive_back_buttons(button_type: str, button_path: str = ""):
-        back_callback_data = HashHandler.generate_hash(button_path) + "#" + "BACK" + button_type
+        back_callback_data = HashHandler.generate_hash(button_path) + "#EXCLUSIVE#" + "BACK" + button_type
         return InlineKeyboardButton('<< BACK', callback_data=back_callback_data)
 
     @staticmethod
@@ -57,9 +57,11 @@ class ExclusiveButtonGenerator:
         button_path = "EXCLUSIVE/" + course
         path = "archive/" + button_path
         buttons = ExclusiveButtonGenerator._get_exclusive_buttons(path, "__year", button_path)
+        buttons.reverse()
         buttons = [[b] for b in buttons]
         buttons.append(
-            [InlineKeyboardButton('🏠HOME', callback_data='HOME')]
+            [ExclusiveButtonGenerator._get_exclusive_back_buttons("__year", button_path),
+             InlineKeyboardButton('🏠HOME', callback_data='HOME')]
         )
         return buttons
 

@@ -4,7 +4,7 @@ import telegram
 from telegram import InlineKeyboardMarkup, Update
 from telegram.ext import CallbackContext
 
-from StartButtonGenerator import ButtonGenerator
+from MainButtonsGenerator import ButtonGenerator
 from FileHandler import FileHandler
 from HashHandler import HashHandler
 from Utils import Utils
@@ -162,7 +162,7 @@ class StartButtonHandler:
         split_text = text.split('/')
         hash_text = split_text[0]
         hash_text_unhashed = HashHandler.get_corresponding_text(hash_text)
-        back_type = split_text[1].split('_')[-1]
+        back_type = split_text[1].split('__')[-1]
         split_text = hash_text_unhashed.split('/')
         course_name = split_text[0]
 
@@ -170,7 +170,7 @@ class StartButtonHandler:
 
         if back_type == 'subject':
             Utils.delete_last_message(update, context)
-            StartButtonHandler.course_button_handler(context, course_name + '_course', chat_id)
+            StartButtonHandler.course_button_handler(context, course_name, chat_id)
         elif back_type == 'subdir':
             param_text = '/'.join(split_text[:-1])
             StartButtonHandler.year_button_handler(update, context, param_text, chat_id)

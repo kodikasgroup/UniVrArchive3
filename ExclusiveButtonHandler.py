@@ -3,6 +3,7 @@ from telegram.ext import CallbackContext
 
 from ExclusiveButtonGenerator import ExclusiveButtonGenerator
 from HashHandler import HashHandler
+from Utils import Utils
 
 
 class ExclusiveButtonHandler:
@@ -44,3 +45,18 @@ class ExclusiveButtonHandler:
         context.bot.send_message(chat_id=chat_id,
                                  text=message,
                                  reply_markup=reply_markup)
+
+    @staticmethod
+    def back_button_handler(update, context, text, chat_id):
+        """
+        Handles the back buttons in the EXCLUSIVE section
+        :param update:
+        :param context:
+        :param text: the callback data
+        :param chat_id: the id of the chat where to send the message
+        :return:
+        """
+        button_type = text.split("#")[2].split("__")[1]
+        Utils.delete_last_message(update, context)
+        if button_type == 'year':
+            ExclusiveButtonHandler.exclusive_button_handler(context, chat_id)
