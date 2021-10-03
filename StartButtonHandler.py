@@ -4,7 +4,7 @@ import telegram
 from telegram import InlineKeyboardMarkup, Update
 from telegram.ext import CallbackContext
 
-from ButtonGenerator import ButtonGenerator
+from StartButtonGenerator import ButtonGenerator
 from FileHandler import FileHandler
 from HashHandler import HashHandler
 from Utils import Utils
@@ -20,8 +20,7 @@ class StartButtonHandler:
         :param chat_id:
         :return:
         """
-        course_name = text.split('_')[0]
-        StartButtonHandler.selected_course = course_name
+        course_name = text.split('__')[0]
         buttons = ButtonGenerator.get_year_buttons(course_name)
         reply_markup = InlineKeyboardMarkup(buttons)
         message = f"Hai Scelto:\n{course_name}"
@@ -142,7 +141,6 @@ class StartButtonHandler:
                                          text=message,
                                          parse_mode=telegram.ParseMode.MARKDOWN_V2)
 
-        # TODO: finish cache system
         response = context.bot.send_document(
             chat_id=chat_id,
             document=file

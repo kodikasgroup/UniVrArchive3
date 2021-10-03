@@ -5,7 +5,8 @@ import telegram
 from telegram import Update, InlineKeyboardMarkup
 from telegram.ext import CallbackContext
 
-from ButtonGenerator import ButtonGenerator
+from ExclusiveButtonHandler import ExclusiveButtonHandler
+from StartButtonGenerator import ButtonGenerator
 from StartButtonHandler import StartButtonHandler
 from Utils import Utils
 
@@ -38,7 +39,7 @@ class Handlers:
     @staticmethod
     def inline_button_handler(update: Update, context: CallbackContext) -> None:
         """
-
+        handles callbacks derived from inline buttons
         :param update:
         :param context:
         :return:
@@ -46,14 +47,26 @@ class Handlers:
 
         chat_id = update.callback_query.from_user.id
         text = update.callback_query.data
-        if text == 'EXCLUSIVE':
-            pass
+        if 'EXCLUSIVE' in text:
+            # Exclusive files
+            if '__course' in text:
+                ExclusiveButtonHandler.course_button_handler(context, text, chat_id)
+            elif '__year' in text:
+                pass
+            elif '__subject' in text:
+                pass
+            elif '__file' in text:
+                pass
+            else:
+                # handle when the user click the EXCLUSIVE button
+                ExclusiveButtonHandler.exclusive_button_handler(context, chat_id)
         elif text == 'HOME':
             StartButtonHandler.home_button_handler(update, context)
         elif 'BACK' in text:
             StartButtonHandler.back_button_handler(update, context, text)
         else:
-            if '_course' in text:
+            # Normal files
+            if '__course' in text:
                 StartButtonHandler.course_button_handler(context, text, chat_id)
             elif '__year' in text:
                 StartButtonHandler.year_button_handler(update, context, text, chat_id)

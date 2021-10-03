@@ -17,10 +17,10 @@ class HashHandler:
         return result
 
     @classmethod
-    def get_corresponding_text(cls, hash_text):
+    def get_corresponding_text(cls, hash_text: str):
         """
 
-        :param hash_text:
+        :param hash_text: the text to transform into plain text
         :return:
         """
         result = cls.lookup_table.get(hash_text, None)

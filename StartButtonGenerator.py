@@ -23,7 +23,7 @@ class ButtonGenerator:
             else:
                 # append pencil to the front and the back of the button text
                 button_text = "✏" + d_name + "✏"
-                buttons.append([InlineKeyboardButton(button_text, callback_data=d_name + '_course')])
+                buttons.append([InlineKeyboardButton(button_text, callback_data=d_name + '__course')])
         return buttons
 
     @staticmethod
@@ -38,8 +38,7 @@ class ButtonGenerator:
         # since the directory name could contain an underscore we use double underscore to separate the
         # `year` string from the rest
         year_buttons = [InlineKeyboardButton(d_name.replace('_', ' '), callback_data=course + '/' + d_name + '__year')
-                        for d_name in
-                        os.listdir(path)]
+                        for d_name in os.listdir(path)]
 
         buttons = [
             year_buttons,
