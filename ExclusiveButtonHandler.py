@@ -82,8 +82,11 @@ class ExclusiveButtonHandler:
         :return:
         """
         button_type = text.split("#")[2].split("__")[1]
-        Utils.delete_last_message(update, context)
         if button_type == 'year':
+            Utils.delete_last_message(update, context)
             ExclusiveButtonHandler.exclusive_button_handler(context, chat_id)
         # TODO handle subject
+        elif button_type == 'subject':
+            Utils.delete_last_message(update, context)
+            ExclusiveButtonHandler.course_button_handler(context, text, chat_id)
         # TODO handle file
