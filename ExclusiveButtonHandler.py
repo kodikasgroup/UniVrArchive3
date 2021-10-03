@@ -10,13 +10,30 @@ from Utils import Utils
 class ExclusiveButtonHandler:
 
     @staticmethod
+    def file_button_handler(update, context, text, chat_id):
+        """
+
+        :param update:
+        :param context:
+        :param text: callback data from the clicked button
+        :param chat_id: the id of the chat where to send the message
+        :return:
+        """
+        hashed_text = text.split("#")[0]
+        unhashed_text = HashHandler.get_corresponding_text(hashed_text)
+        path = "archive/" + unhashed_text
+        price = unhashed_text.split('/')[-1].split('.')[0]
+        price = int(price)
+        # TODO complete method
+
+    @staticmethod
     def subject_button_handler(update: Update, context: CallbackContext, text: str, chat_id: int):
         """
 
         :param update:
         :param context:
-        :param text:
-        :param chat_id:
+        :param text: callback data from the clicked button
+        :param chat_id: the id of the chat where to send the message
         :return:
         """
         hashed_text = text.split("#")[0]
@@ -40,8 +57,8 @@ class ExclusiveButtonHandler:
 
         :param update:
         :param context:
-        :param text:
-        :param chat_id:
+        :param text: callback data from the clicked button
+        :param chat_id: the id of the chat where to send the message
         :return:
         """
         hashed_text = text.split("#")[0]
@@ -117,6 +134,3 @@ class ExclusiveButtonHandler:
         elif button_type == 'file':
             ExclusiveButtonHandler.year_button_handler(update, context, text, chat_id)
 
-    # @staticmethod
-    # def file_button_handler(update, context, text, chat_id):
-    #     pass
