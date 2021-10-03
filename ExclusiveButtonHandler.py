@@ -8,6 +8,32 @@ from Utils import Utils
 
 
 class ExclusiveButtonHandler:
+
+    @staticmethod
+    def subject_button_handler(update: Update, context: CallbackContext, text: str, chat_id: int):
+        """
+
+        :param update:
+        :param context:
+        :param text:
+        :param chat_id:
+        :return:
+        """
+        hashed_text = text.split("#")[0]
+        unhashed_text = HashHandler.get_corresponding_text(hashed_text)
+        splitted_text = unhashed_text.split('/')
+        subject_name = splitted_text[3]
+        year_name = splitted_text[2]
+        course_name = splitted_text[1]
+        buttons = ExclusiveButtonGenerator.get_file_buttons(course_name, year_name, subject_name)
+        reply_markup = InlineKeyboardMarkup(buttons)
+        message = "💥ECCO IL MATERIALE DELLA SEZIONE💥"
+        Utils.delete_last_message(update, context)
+        context.bot.send_message(chat_id=chat_id,
+                                 text=message,
+                                 reply_markup=reply_markup,
+                                 parse_mode=telegram.ParseMode.MARKDOWN_V2)
+
     @staticmethod
     def year_button_handler(update: Update, context: CallbackContext, text: str, chat_id: int) -> None:
         """
@@ -72,7 +98,7 @@ class ExclusiveButtonHandler:
                                  reply_markup=reply_markup)
 
     @staticmethod
-    def back_button_handler(update, context, text, chat_id):
+    def back_button_handler(update: Update, context: CallbackContext, text: str, chat_id: int):
         """
         Handles the back buttons in the EXCLUSIVE section
         :param update:
@@ -85,8 +111,12 @@ class ExclusiveButtonHandler:
         if button_type == 'year':
             Utils.delete_last_message(update, context)
             ExclusiveButtonHandler.exclusive_button_handler(context, chat_id)
-        # TODO handle subject
         elif button_type == 'subject':
             Utils.delete_last_message(update, context)
             ExclusiveButtonHandler.course_button_handler(context, text, chat_id)
-        # TODO handle file
+        elif button_type == 'file':
+            ExclusiveButtonHandler.year_button_handler(update, context, text, chat_id)
+
+    # @staticmethod
+    # def file_button_handler(update, context, text, chat_id):
+    #     pass
