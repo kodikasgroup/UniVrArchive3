@@ -1,4 +1,5 @@
-from telegram import InlineKeyboardMarkup
+import telegram
+from telegram import InlineKeyboardMarkup, Update
 from telegram.ext import CallbackContext
 
 from ExclusiveButtonGenerator import ExclusiveButtonGenerator
@@ -7,6 +8,30 @@ from Utils import Utils
 
 
 class ExclusiveButtonHandler:
+    @staticmethod
+    def year_button_handler(update: Update, context: CallbackContext, text: str, chat_id: int) -> None:
+        """
+
+        :param update:
+        :param context:
+        :param text:
+        :param chat_id:
+        :return:
+        """
+        hashed_text = text.split("#")[0]
+        unhashed_text = HashHandler.get_corresponding_text(hashed_text)
+        splitted_text = unhashed_text.split('/')
+        year_name = splitted_text[2]
+        course_name = splitted_text[1]
+        buttons = ExclusiveButtonGenerator.get_subject_buttons(course_name, year_name)
+        reply_markup = InlineKeyboardMarkup(buttons)
+        message = f"Hai Scelto:\n{year_name.replace('_', ' ')}📚📚📚"
+        Utils.delete_last_message(update, context)
+        context.bot.send_message(chat_id=chat_id,
+                                 text=message,
+                                 reply_markup=reply_markup,
+                                 parse_mode=telegram.ParseMode.MARKDOWN_V2)
+
     @staticmethod
     def course_button_handler(context: CallbackContext, text: str, chat_id: int) -> None:
         """
@@ -60,3 +85,5 @@ class ExclusiveButtonHandler:
         Utils.delete_last_message(update, context)
         if button_type == 'year':
             ExclusiveButtonHandler.exclusive_button_handler(context, chat_id)
+        # TODO handle subject
+        # TODO handle file

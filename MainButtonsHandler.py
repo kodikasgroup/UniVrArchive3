@@ -32,6 +32,7 @@ class StartButtonHandler:
     def year_button_handler(update: Update, context: CallbackContext, text: str, chat_id: int) -> None:
         """
 
+        :param update:
         :param context:
         :param text:
         :param chat_id:

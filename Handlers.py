@@ -59,10 +59,13 @@ class Handlers:
             if '__course' in text:
                 ExclusiveButtonHandler.course_button_handler(context, text, chat_id)
             elif '__year' in text:
+                ExclusiveButtonHandler.year_button_handler(update, context, text, chat_id)
                 pass
             elif '__subject' in text:
+                # TODO add handler for subject button into exclusive section
                 pass
             elif '__file' in text:
+                # TODO add handler for file button into exclusive section
                 pass
             else:
                 # handle when the user click the EXCLUSIVE button

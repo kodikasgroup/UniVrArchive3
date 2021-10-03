@@ -74,4 +74,10 @@ class ExclusiveButtonGenerator:
 
         button_path = "EXCLUSIVE/" + course + "/" + year
         path = "archive/" + button_path
-        return ExclusiveButtonGenerator._get_exclusive_buttons(path, "__subject", button_path)
+        buttons = ExclusiveButtonGenerator._get_exclusive_buttons(path, "__subject", button_path)
+        buttons = [[b] for b in buttons]
+        buttons.append(
+            [ExclusiveButtonGenerator._get_exclusive_back_buttons("__subject", button_path),
+             InlineKeyboardButton('🏠HOME', callback_data='HOME')]
+        )
+        return buttons
